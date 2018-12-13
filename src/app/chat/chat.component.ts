@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ChatService } from '../chat.service';
 
 @Component({
@@ -11,6 +11,9 @@ export class ChatComponent implements OnInit {
     chat: any = {};
     chatRoomConnectionError = null;
     createdChat = null;
+    invalidNickname = false;
+
+    @ViewChild("chatbox") private chatbox: ElementRef;
 
     constructor(private chatService: ChatService) { }
 
@@ -18,8 +21,12 @@ export class ChatComponent implements OnInit {
     }
 
     connect(chatId) {
+        this.invalidNickname = false;
+
         if (!this.nickname || this.nickname.trim().length === 0) {
             this.chatRoomConnectionError = "Please enter a nickname";
+
+            this.invalidNickname = true;
             return;
         }
 
@@ -30,6 +37,8 @@ export class ChatComponent implements OnInit {
 
             this.chatService.getMessageStream().subscribe((message) => {
                 this.chat.messages.push(message);
+
+                setTimeout(() => { this.scrollToBottom() }, 100);
             })
 
             this.chatRoomConnectionError = null;
@@ -48,5 +57,11 @@ export class ChatComponent implements OnInit {
         this.chatService.createChat(name).subscribe(chat => {
             this.createdChat = chat;
         });
+    }
+
+    scrollToBottom(): void {
+        try {
+            this.chatbox.nativeElement.scrollTop = this.chatbox.nativeElement.scrollHeight;
+        } catch (err) { }
     }
 }

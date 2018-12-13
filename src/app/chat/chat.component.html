@@ -1,42 +1,50 @@
 <div class="chatbox">
-    <div *ngIf="chat.id">
-        <div class="chatbox-name">Connected to: {{chat.name}}</div>
-
-        <div class="chatbox-messages">
-            <div *ngFor="let message of chat.messages">{{message.sender}}: {{message.message}}</div>
-        </div>
-
-        <div>
-            Message: <input type="text" [(ngModel)]="messageInput">
-            <input type="button" value="Send" (click)="sendMessage(messageInput)">
-        </div>
-    </div>
+    <div class="chatbox-title"><span class="chatbox-title-text">Quick Chat<span *ngIf="chat.id"> - Room: {{chat.name}}
+                ({{chat.id}}) - Nick: {{nickname}}</span></span></div>
 
     <div *ngIf="!chat.id">
-        Nick: <input type="text" [(ngModel)]="nickname">
-
-        <div>
-            <div>Connect to public:</div>
-            <input type="button" value="Connect to General" (click)="connect(1)">
+        <div class="chatbox-panel">
+            Enter a nickname:
+            <input type="text" class="chatbox-input-text" [class.chatbox-input-text-invalid]="invalidNickname && !nickname"
+                [(ngModel)]="nickname">
         </div>
 
-        <div>
-            <div>Connect to chatroom:</div>
-            <input type="text" [(ngModel)]="chatId">
-            <input type="button" value="Connect" (click)="connect(chatId)">
+        <div class="chatbox-panel">
+            <div>Connect to a chatroom:</div>
+
+            <div style="margin-top: 15px;">
+                <input type="button" class="chatbox-input-button" style="margin-right: 20px;" value="General" (click)="connect(1)">
+
+                <span style="margin-right: 20px;">Or enter the id of a chatroom:</span>
+                <input type="text" class="chatbox-input-text" [(ngModel)]="chatId">
+                <input type="button" class="chatbox-input-button" value="Connect" (click)="connect(chatId)">
+            </div>
         </div>
+
+        <div class="chatbox-panel">
+            <div>Create a new room:</div>
+            <input type="text" class="chatbox-input-text" [(ngModel)]="newRoomName">
+            <input type="button" class="chatbox-input-button" style="margin-top: 15px;" value="Create" (click)="createChat(newRoomName)">
+
+            <span *ngIf="createdChat">
+                New room id: {{createdChat.id}}
+                <input type="button" class="chatbox-input-button" value="Connect" (click)="connect(createdChat.id)">
+            </span>
+        </div>
+
         <div *ngIf="chatRoomConnectionError" class="error">
             {{chatRoomConnectionError}}
         </div>
+    </div>
 
-        <div>
-            <div>Create a new room:</div>
-            <input type="text" [(ngModel)]="newRoomName">
-            <input type="button" value="Create" (click)="createChat(newRoomName)">
+    <div *ngIf="chat.id">
+        <div class="chatbox-messages" #chatbox>
+            <div *ngFor="let message of chat.messages">{{message.sender}}: {{message.message}}</div>
         </div>
 
-        <div *ngIf="createdChat">
-            Created chat id: {{createdChat.id}}
+        <div style="margin-top: 20px;">
+            <input type="text" class="chatbox-input-text chatbox-input-text-message" [(ngModel)]="messageInput">
+            <input type="button" class="chatbox-input-button" value="Send" (click)="sendMessage(messageInput)">
         </div>
     </div>
 </div>
