@@ -9,6 +9,8 @@ import { ChatService } from '../chat.service';
 export class ChatComponent implements OnInit {
     nickname;
     chat: any = {};
+    chatRoomConnectionError = null;
+    createdChat = null;
 
     constructor(private chatService: ChatService) { }
 
@@ -16,6 +18,11 @@ export class ChatComponent implements OnInit {
     }
 
     connect(chatId) {
+        if (!this.nickname || this.nickname.trim().length === 0) {
+            this.chatRoomConnectionError = "Please enter a nickname";
+            return;
+        }
+
         this.chatService.getChat(chatId).subscribe(chat => {
             this.chat = chat;
 
@@ -23,7 +30,11 @@ export class ChatComponent implements OnInit {
 
             this.chatService.getMessageStream().subscribe((message) => {
                 this.chat.messages.push(message);
-            });
+            })
+
+            this.chatRoomConnectionError = null;
+        }, (error) => {
+            this.chatRoomConnectionError = error.error.message;
         });
     }
 
@@ -33,4 +44,9 @@ export class ChatComponent implements OnInit {
         });
     }
 
+    createChat(name) {
+        this.chatService.createChat(name).subscribe(chat => {
+            this.createdChat = chat;
+        });
+    }
 }

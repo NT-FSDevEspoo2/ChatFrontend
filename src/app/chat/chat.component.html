@@ -1,6 +1,6 @@
 <div class="chatbox">
     <div *ngIf="chat.id">
-        <div class="chatbox-name">{{chat.name}}</div>
+        <div class="chatbox-name">Connected to: {{chat.name}}</div>
 
         <div class="chatbox-messages">
             <div *ngFor="let message of chat.messages">{{message.sender}}: {{message.message}}</div>
@@ -14,6 +14,29 @@
 
     <div *ngIf="!chat.id">
         Nick: <input type="text" [(ngModel)]="nickname">
-        <input type="button" value="Connect" (click)="connect(1)">
+
+        <div>
+            <div>Connect to public:</div>
+            <input type="button" value="Connect to General" (click)="connect(1)">
+        </div>
+
+        <div>
+            <div>Connect to chatroom:</div>
+            <input type="text" [(ngModel)]="chatId">
+            <input type="button" value="Connect" (click)="connect(chatId)">
+        </div>
+        <div *ngIf="chatRoomConnectionError" class="error">
+            {{chatRoomConnectionError}}
+        </div>
+
+        <div>
+            <div>Create a new room:</div>
+            <input type="text" [(ngModel)]="newRoomName">
+            <input type="button" value="Create" (click)="createChat(newRoomName)">
+        </div>
+
+        <div *ngIf="createdChat">
+            Created chat id: {{createdChat.id}}
+        </div>
     </div>
 </div>

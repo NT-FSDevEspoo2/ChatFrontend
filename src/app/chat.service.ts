@@ -43,4 +43,8 @@ export class ChatService {
             });
         });
     }
+
+    createChat(name) {
+        return this.http.post(api + "/create/" + name, httpOptions);
+    }
 }
