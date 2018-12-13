@@ -1,0 +1,19 @@
+<div class="chatbox">
+    <div *ngIf="chat.id">
+        <div class="chatbox-name">{{chat.name}}</div>
+
+        <div class="chatbox-messages">
+            <div *ngFor="let message of chat.messages">{{message.sender}}: {{message.message}}</div>
+        </div>
+
+        <div>
+            Message: <input type="text" [(ngModel)]="messageInput">
+            <input type="button" value="Send" (click)="sendMessage(messageInput)">
+        </div>
+    </div>
+
+    <div *ngIf="!chat.id">
+        Nick: <input type="text" [(ngModel)]="nickname">
+        <input type="button" value="Connect" (click)="connect(1)">
+    </div>
+</div>
